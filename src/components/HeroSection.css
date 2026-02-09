@@ -1,4 +1,4 @@
-/* Hero Section Styles */
+/* Hero Section Styles - Enhanced AI Zen Oasis */
 
 .hero-container {
     position: relative;
@@ -56,7 +56,7 @@
     padding: 1rem 3rem;
     font-size: 1.1rem;
     font-weight: 600;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
     color: #ffffff;
     background: rgba(100, 108, 255, 0.1);
     border: 2px solid rgba(100, 108, 255, 0.5);
@@ -87,6 +87,110 @@
 
 .hero-cta:hover::before {
     left: 100%;
+}
+
+/* Anti-Gravity Toggle Button */
+.anti-gravity-toggle {
+    position: relative;
+    padding: 0.875rem 2rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    color: #ffffff;
+    background: rgba(255, 0, 255, 0.1);
+    border: 2px solid rgba(255, 0, 255, 0.4);
+    border-radius: 50px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.anti-gravity-toggle.active {
+    background: rgba(0, 255, 255, 0.2);
+    border-color: #00ffff;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+}
+
+.anti-gravity-toggle:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 25px rgba(255, 0, 255, 0.3);
+}
+
+.anti-gravity-toggle.active:hover {
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+}
+
+.toggle-icon {
+    font-size: 1.2rem;
+}
+
+/* Zen Quote Overlay */
+.quote-overlay {
+    position: fixed;
+    bottom: 8rem;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 600px;
+    width: 90%;
+    padding: 2rem;
+    background: rgba(20, 20, 40, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(100, 108, 255, 0.3);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    z-index: 50;
+}
+
+.quote-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.quote-category {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #00ffff;
+    opacity: 0.8;
+}
+
+.quote-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #ffffff;
+    margin: 0;
+}
+
+.quote-author {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-style: italic;
+    text-align: right;
+}
+
+/* Instructions */
+.instructions {
+    position: absolute;
+    top: 6rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 15;
+    padding: 0.75rem 1.5rem;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* Scroll Indicator */
@@ -158,11 +262,44 @@
         padding: 0.875rem 2rem;
         font-size: 1rem;
     }
+
+    .anti-gravity-toggle {
+        padding: 0.75rem 1.5rem;
+        font-size: 0.875rem;
+    }
+
+    .quote-overlay {
+        bottom: 6rem;
+        padding: 1.5rem;
+    }
+
+    .quote-text {
+        font-size: 1rem !important;
+    }
+
+    .instructions {
+        top: 5rem;
+        font-size: 0.7rem;
+        padding: 0.5rem 1rem;
+    }
 }
 
 @media (max-width: 480px) {
     .hero-overlay h1 {
         font-size: 2.5rem !important;
+    }
+
+    .hero-overlay>div>div {
+        flex-direction: column;
+    }
+
+    .quote-overlay {
+        bottom: 5rem;
+        padding: 1.25rem;
+    }
+
+    .instructions {
+        display: none;
     }
 }
 
@@ -171,7 +308,8 @@
 
     .scroll-indicator,
     .wheel,
-    .hero-cta::before {
+    .hero-cta::before,
+    .quote-overlay {
         animation: none;
     }
 }

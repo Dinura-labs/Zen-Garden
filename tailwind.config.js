@@ -8,6 +8,7 @@ export default {
         extend: {
             fontFamily: {
                 'inter': ['Inter', 'system-ui', 'sans-serif'],
+                'space': ['Space Grotesk', 'Inter', 'system-ui', 'sans-serif'],
             },
         },
     },
