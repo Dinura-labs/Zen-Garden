@@ -136,7 +136,7 @@ export default function HeroSection() {
                     transition={{ duration: 1.5 }}
                     className="text-center z-10"
                 >
-                    <DecryptedText text="AI Zen Garden" delay={0.5} />
+                    <DecryptedText text="Buddhist Oasis" delay={0.5} />
 
                     <motion.p
                         initial={{ opacity: 0, y: 20 }}
@@ -144,7 +144,7 @@ export default function HeroSection() {
                         transition={{ duration: 0.8, delay: 1.5 }}
                         className="text-lg md:text-2xl text-gray-300 mt-6 font-inter font-light tracking-wide"
                     >
-                        Where Ancient Wisdom Meets Digital Consciousness
+                        Enlightenment Through Digital Mindfulness
                     </motion.p>
 
                     <motion.div
@@ -195,7 +195,7 @@ export default function HeroSection() {
                 className="instructions"
             >
                 <p className="text-xs text-gray-500 font-inter">
-                    Hover over crystals for wisdom • Toggle anti-gravity • Move mouse on sand
+                    Hover over sacred objects for wisdom • Toggle anti-gravity • Move mouse on sand
                 </p>
             </motion.div>
         </div>
