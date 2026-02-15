@@ -5,6 +5,7 @@ export default function MeditationBackground() {
     const audioCtxRef = useRef(null);
     const gainNodeRef = useRef(null);
     const oscillatorsRef = useRef([]);
+    const intervalRef = useRef(null);
 
     const startMeditation = () => {
         if (!audioCtxRef.current) {
@@ -18,76 +19,99 @@ export default function MeditationBackground() {
             audioCtxRef.current.resume();
         }
 
-        // Create a rich drone using multiple oscillators
-        const frequencies = [128.43, 192.64, 256.87, 385.31]; // Meditative frequencies
+        // Deep binaural drone
+        const baseFrequencies = [128.43, 192.64, 256.87]; // Low drone
 
-        frequencies.forEach((freq, i) => {
-            const osc = audioCtxRef.current.createOscillator();
-            const oscGain = audioCtxRef.current.createGain();
+        baseFrequencies.forEach((freq) => {
+            const oscL = audioCtxRef.current.createOscillator();
+            const oscR = audioCtxRef.current.createOscillator();
+            const pL = audioCtxRef.current.createStereoPanner();
+            const pR = audioCtxRef.current.createStereoPanner();
+            const g = audioCtxRef.current.createGain();
 
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(freq, audioCtxRef.current.currentTime);
+            oscL.type = 'sine';
+            oscR.type = 'sine';
 
-            // Add subtle detuning for thickness
-            osc.detune.setValueAtTime(Math.random() * 10 - 5, audioCtxRef.current.currentTime);
+            // 6Hz binaural offset (Theta state)
+            oscL.frequency.setValueAtTime(freq, audioCtxRef.current.currentTime);
+            oscR.frequency.setValueAtTime(freq + 6, audioCtxRef.current.currentTime);
 
-            oscGain.gain.setValueAtTime(0.1 / frequencies.length, audioCtxRef.current.currentTime);
+            pL.pan.value = -1;
+            pR.pan.value = 1;
+            g.gain.value = 0.05;
 
-            // Add slow modulation to the gain for a breathing effect
-            const lfo = audioCtxRef.current.createOscillator();
-            const lfoGain = audioCtxRef.current.createGain();
-            lfo.type = 'sine';
-            lfo.frequency.setValueAtTime(0.1 + Math.random() * 0.1, audioCtxRef.current.currentTime);
-            lfoGain.gain.setValueAtTime(0.02, audioCtxRef.current.currentTime);
+            oscL.connect(pL);
+            oscR.connect(pR);
+            pL.connect(g);
+            pR.connect(g);
+            g.connect(gainNodeRef.current);
 
-            lfo.connect(lfoGain);
-            lfoGain.connect(oscGain.gain);
-
-            osc.connect(oscGain);
-            oscGain.connect(gainNodeRef.current);
-
-            osc.start();
-            lfo.start();
-            oscillatorsRef.current.push({ osc, lfo });
+            oscL.start();
+            oscR.start();
+            oscillatorsRef.current.push(oscL, oscR);
         });
 
-        gainNodeRef.current.gain.linearRampToValueAtTime(0.4, audioCtxRef.current.currentTime + 3);
+        // Ethereal wind chimes
+        intervalRef.current = setInterval(() => {
+            if (!audioCtxRef.current) return;
+            const osc = audioCtxRef.current.createOscillator();
+            const g = audioCtxRef.current.createGain();
+            const p = audioCtxRef.current.createStereoPanner();
+
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(800 + Math.random() * 1200, audioCtxRef.current.currentTime);
+            p.pan.value = (Math.random() - 0.5) * 2;
+
+            g.gain.setValueAtTime(0, audioCtxRef.current.currentTime);
+            g.gain.linearRampToValueAtTime(0.015, audioCtxRef.current.currentTime + 0.1);
+            g.gain.exponentialRampToValueAtTime(0.001, audioCtxRef.current.currentTime + 3);
+
+            osc.connect(p);
+            p.connect(g);
+            g.connect(audioCtxRef.current.destination);
+
+            osc.start();
+            osc.stop(audioCtxRef.current.currentTime + 3.1);
+        }, 4000);
+
+        gainNodeRef.current.gain.linearRampToValueAtTime(0.5, audioCtxRef.current.currentTime + 4);
         setIsPlaying(true);
     };
 
     const stopMeditation = () => {
         if (gainNodeRef.current) {
-            gainNodeRef.current.gain.linearRampToValueAtTime(0, audioCtxRef.current.currentTime + 2);
+            gainNodeRef.current.gain.linearRampToValueAtTime(0, audioCtxRef.current.currentTime + 3);
+            clearInterval(intervalRef.current);
             setTimeout(() => {
-                oscillatorsRef.current.forEach(({ osc, lfo }) => {
-                    osc.stop();
-                    lfo.stop();
+                oscillatorsRef.current.forEach(osc => {
+                    try { osc.stop(); } catch (e) { }
                 });
                 oscillatorsRef.current = [];
                 setIsPlaying(false);
-            }, 2000);
+            }, 3000);
         }
     };
 
     return (
-        <div className="fixed bottom-24 right-8 z-50 flex items-center gap-3">
-            <button
-                onClick={isPlaying ? stopMeditation : startMeditation}
-                className={`flex items-center justify-center w-12 h-12 rounded-full backdrop-blur-md transition-all duration-500 ${isPlaying
-                        ? 'bg-yellow-500/20 border-yellow-500/50 shadow-[0_0_20px_rgba(234,179,8,0.3)]'
-                        : 'bg-white/10 border-white/20 hover:bg-white/20'
-                    } border`}
-                title={isPlaying ? "Stop Meditation" : "Start Meditation"}
-            >
-                <span className={`text-2xl transition-transform duration-500 ${isPlaying ? 'scale-110' : 'scale-100'}`}>
-                    {isPlaying ? '🧘' : '🎵'}
-                </span>
-            </button>
+        <div className="fixed bottom-24 right-8 z-50 flex items-center gap-4">
             {isPlaying && (
-                <div className="text-yellow-200/80 text-xs font-space tracking-widest uppercase animate-pulse">
-                    Meditation Active
+                <div className="flex flex-col items-end">
+                    <div className="text-yellow-400 text-[10px] font-playfair tracking-[4px] uppercase animate-pulse">
+                        Mindfulness Active
+                    </div>
                 </div>
             )}
+            <button
+                onClick={isPlaying ? stopMeditation : startMeditation}
+                className={`flex items-center justify-center w-14 h-14 rounded-full backdrop-blur-xl transition-all duration-700 shadow-2xl ${isPlaying
+                        ? 'bg-yellow-500/20 border-yellow-500/50 shadow-yellow-500/20'
+                        : 'bg-white/5 border-white/10 hover:bg-white/15'
+                    } border group`}
+            >
+                <span className={`text-2xl transition-transform duration-700 group-hover:scale-125 ${isPlaying ? 'animate-spin-slow' : ''}`}>
+                    {isPlaying ? '🪷' : '🧘'}
+                </span>
+            </button>
         </div>
     );
 }

@@ -1,276 +1,254 @@
 import React, { useRef, useMemo, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
+import { Float, MeshDistortMaterial, MeshWobbleMaterial, Sparkles, PerspectiveCamera } from '@react-three/drei';
 import { CrystallineNode } from './CrystallineNode';
 import { InteractiveSand } from './InteractiveSand';
 import { PhysicsWorld, FloatingStone, FloatingPetal } from './PhysicsWorld';
 import { updateListenerPosition } from '../audio/ChimeSound';
 
-// Enhanced Floating Island with higher detail
-export function FloatingIsland() {
-    const meshRef = useRef();
-
-    useFrame((state) => {
-        meshRef.current.position.y = Math.sin(state.clock.elapsedTime * 0.5) * 0.15;
-        meshRef.current.rotation.y = state.clock.elapsedTime * 0.03;
-    });
-
-    return (
-        <mesh ref={meshRef} position={[0, -0.3, 0]} castShadow receiveShadow>
-            <dodecahedronGeometry args={[1.8, 2]} />
-            <meshStandardMaterial
-                color="#5a4d41"
-                roughness={0.9}
-                metalness={0.05}
-            />
-        </mesh>
-    );
-}
-
-// Enhanced Bonsai Tree with time-responsive colors
-export function BonsaiTree({ isGoldenHour }) {
+// Sacred Bodhi Tree
+function BodhiTree({ isGoldenHour }) {
     const groupRef = useRef();
-
-    const foliageColor = isGoldenHour ? '#3a6020' : '#2a4518';
-    const trunkColor = isGoldenHour ? '#5a4230' : '#4a3728';
+    const foliageColor = isGoldenHour ? '#4d7c2c' : '#2d4c1e';
+    const trunkColor = isGoldenHour ? '#4a3728' : '#3d2b1f';
 
     useFrame((state) => {
-        groupRef.current.rotation.z = Math.sin(state.clock.elapsedTime * 0.8) * 0.06;
-        groupRef.current.rotation.x = Math.cos(state.clock.elapsedTime * 0.6) * 0.04;
+        const time = state.clock.elapsedTime;
+        groupRef.current.rotation.z = Math.sin(time * 0.5) * 0.03;
+        groupRef.current.rotation.x = Math.cos(time * 0.4) * 0.02;
     });
 
     return (
-        <group ref={groupRef} position={[0, 0.5, 0]}>
-            {/* Main Trunk */}
-            <mesh position={[0, -0.3, 0]} castShadow>
-                <cylinderGeometry args={[0.08, 0.13, 0.9, 8]} />
-                <meshStandardMaterial color={trunkColor} roughness={0.9} />
-            </mesh>
+        <group ref={groupRef} position={[0, 0.6, 0]}>
+            <Float speed={2} rotationIntensity={0.5} floatIntensity={0.5}>
+                {/* Main Trunk - Stylized and organic */}
+                <mesh position={[0, 0, 0]} castShadow>
+                    <cylinderGeometry args={[0.05, 0.15, 1.2, 8]} />
+                    <meshStandardMaterial color={trunkColor} roughness={0.9} />
+                </mesh>
 
-            {/* Branch 1 */}
-            <mesh position={[0.35, 0, 0]} rotation={[0, 0, -0.5]} castShadow>
-                <cylinderGeometry args={[0.04, 0.08, 0.7, 6]} />
-                <meshStandardMaterial color={trunkColor} roughness={0.9} />
-            </mesh>
+                {/* Branches */}
+                {[...Array(6)].map((_, i) => (
+                    <mesh
+                        key={i}
+                        position={[
+                            Math.sin(i * 1.05) * 0.3,
+                            0.2 + i * 0.15,
+                            Math.cos(i * 1.05) * 0.3
+                        ]}
+                        rotation={[
+                            Math.random() * 0.5,
+                            i * 1.05,
+                            0.5 + Math.random() * 0.5
+                        ]}
+                        castShadow
+                    >
+                        <cylinderGeometry args={[0.02, 0.05, 0.8, 6]} />
+                        <meshStandardMaterial color={trunkColor} roughness={0.9} />
+                    </mesh>
+                ))}
 
-            {/* Branch 2 */}
-            <mesh position={[-0.25, 0.1, 0.1]} rotation={[0, 0, 0.4]} castShadow>
-                <cylinderGeometry args={[0.035, 0.07, 0.5, 6]} />
-                <meshStandardMaterial color={trunkColor} roughness={0.9} />
-            </mesh>
-
-            {/* Foliage clusters */}
-            <mesh position={[0, 0.35, 0]} castShadow>
-                <dodecahedronGeometry args={[0.28, 1]} />
-                <meshStandardMaterial color={foliageColor} roughness={0.7} />
-            </mesh>
-
-            <mesh position={[0.55, 0.2, 0]} castShadow>
-                <dodecahedronGeometry args={[0.22, 1]} />
-                <meshStandardMaterial color={foliageColor} roughness={0.7} />
-            </mesh>
-
-            <mesh position={[-0.35, 0.28, 0.12]} castShadow>
-                <dodecahedronGeometry args={[0.2, 1]} />
-                <meshStandardMaterial color={foliageColor} roughness={0.7} />
-            </mesh>
-
-            <mesh position={[0.1, 0.42, -0.1]} castShadow>
-                <dodecahedronGeometry args={[0.18, 1]} />
-                <meshStandardMaterial color={foliageColor} roughness={0.7} />
-            </mesh>
+                {/* Lush Foliage Clusters */}
+                {[...Array(12)].map((_, i) => (
+                    <mesh
+                        key={i}
+                        position={[
+                            Math.sin(i * 0.5) * 0.6,
+                            0.6 + Math.random() * 0.4,
+                            Math.cos(i * 0.5) * 0.6
+                        ]}
+                        castShadow
+                    >
+                        <dodecahedronGeometry args={[0.25 + Math.random() * 0.15, 1]} />
+                        <MeshWobbleMaterial
+                            color={foliageColor}
+                            speed={1}
+                            factor={0.2}
+                            roughness={1}
+                        />
+                    </mesh>
+                ))}
+            </Float>
         </group>
     );
 }
 
-// Enhanced Starfield with better visuals
-export function Starfield({ count = 400, isGoldenHour }) {
-    const pointsRef = useRef();
-
-    const particles = useMemo(() => {
-        const positions = new Float32Array(count * 3);
-        const velocities = new Float32Array(count);
-        const colors = new Float32Array(count * 3);
-
-        for (let i = 0; i < count; i++) {
-            positions[i * 3] = (Math.random() - 0.5) * 60;
-            positions[i * 3 + 1] = (Math.random() - 0.5) * 60;
-            positions[i * 3 + 2] = (Math.random() - 0.5) * 60;
-            velocities[i] = Math.random() * 0.5 + 0.1;
-
-            // Color based on time
-            const colorMix = isGoldenHour ? 0.8 : 0.3;
-            colors[i * 3] = colorMix + Math.random() * 0.2;
-            colors[i * 3 + 1] = colorMix + Math.random() * 0.2;
-            colors[i * 3 + 2] = 1;
-        }
-
-        return { positions, velocities, colors };
-    }, [count, isGoldenHour]);
-
-    useFrame(() => {
-        const positions = pointsRef.current.geometry.attributes.position.array;
-
-        for (let i = 0; i < count; i++) {
-            positions[i * 3 + 2] += particles.velocities[i] * 0.03;
-
-            if (positions[i * 3 + 2] > 30) {
-                positions[i * 3 + 2] = -30;
-            }
-        }
-
-        pointsRef.current.geometry.attributes.position.needsUpdate = true;
-    });
-
+// Glowing Stupa focal point
+function Stupa({ isGoldenHour }) {
     return (
-        <points ref={pointsRef}>
-            <bufferGeometry>
-                <bufferAttribute
-                    attach="attributes-position"
-                    count={count}
-                    array={particles.positions}
-                    itemSize={3}
-                />
-                <bufferAttribute
-                    attach="attributes-color"
-                    count={count}
-                    array={particles.colors}
-                    itemSize={3}
-                />
-            </bufferGeometry>
-            <pointsMaterial
-                size={0.12}
-                vertexColors
-                transparent
-                opacity={0.7}
-                sizeAttenuation
-                blending={THREE.AdditiveBlending}
-            />
-        </points>
+        <group position={[0, -0.2, -4]}>
+            <Float speed={1.5} rotationIntensity={0.2} floatIntensity={0.5}>
+                {/* Base */}
+                <mesh position={[0, 0, 0]}>
+                    <cylinderGeometry args={[1.5, 1.8, 0.4, 32]} />
+                    <meshStandardMaterial color="#8b4513" roughness={0.8} />
+                </mesh>
+
+                {/* Dome */}
+                <mesh position={[0, 0.6, 0]}>
+                    <sphereGeometry args={[1.2, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2]} />
+                    <meshStandardMaterial
+                        color="#daa520"
+                        metalness={0.8}
+                        roughness={0.2}
+                        emissive="#ffaa00"
+                        emissiveIntensity={0.2}
+                    />
+                </mesh>
+
+                {/* Spire */}
+                <mesh position={[0, 1.8, 0]}>
+                    <cylinderGeometry args={[0.05, 0.2, 1.2, 16]} />
+                    <meshStandardMaterial color="#ffd700" metalness={1} />
+                </mesh>
+
+                {/* Focal Light */}
+                <pointLight position={[0, 1.5, 0]} intensity={2} color="#ffaa00" distance={5} />
+            </Float>
+        </group>
     );
 }
 
-// Main Enhanced Scene
-export default function Scene3D({ antiGravity, onQuoteHover }) {
-    const [currentQuote, setCurrentQuote] = useState(null);
+// Sacred Lotus Particles
+function LotusParticles({ count = 50, isGoldenHour }) {
+    const particles = useMemo(() => {
+        const temp = [];
+        for (let i = 0; i < count; i++) {
+            temp.push({
+                position: [
+                    (Math.random() - 0.5) * 20,
+                    Math.random() * 10,
+                    (Math.random() - 0.5) * 20
+                ],
+                speed: Math.random() * 0.02 + 0.01,
+                size: Math.random() * 0.05 + 0.02
+            });
+        }
+        return temp;
+    }, [count]);
 
-    // Time-based lighting
+    return (
+        <group>
+            {particles.map((p, i) => (
+                <Float key={i} position={p.position} speed={2} rotationIntensity={2} floatIntensity={1}>
+                    <mesh>
+                        <tetrahedronGeometry args={[p.size, 0]} />
+                        <meshStandardMaterial
+                            color={isGoldenHour ? "#ffd700" : "#ffb3d9"}
+                            emissive={isGoldenHour ? "#ff8800" : "#ff66aa"}
+                            emissiveIntensity={2}
+                            transparent
+                            opacity={0.8}
+                        />
+                    </mesh>
+                </Float>
+            ))}
+            <Sparkles
+                count={100}
+                scale={15}
+                size={2}
+                speed={0.5}
+                opacity={0.3}
+                color={isGoldenHour ? "#ffcc00" : "#ffffff"}
+            />
+        </group>
+    );
+}
+
+export default function Scene3D({ antiGravity, onQuoteHover }) {
     const hour = new Date().getHours();
     const isGoldenHour = hour >= 6 && hour < 18;
 
-    const handleCrystalHover = (quote, position) => {
-        setCurrentQuote(quote);
-        onQuoteHover && onQuoteHover(quote);
-    };
-
-    // Update audio listener position
-    useFrame(({ camera }) => {
+    useFrame(({ camera, state }) => {
         updateListenerPosition(camera.position.x, camera.position.y, camera.position.z);
     });
 
     return (
         <>
-            {/* Time-based Lighting System */}
-            <ambientLight intensity={isGoldenHour ? 0.4 : 0.25} />
+            <PerspectiveCamera makeDefault position={[0, 3, 10]} fov={50} />
 
-            {/* Main directional light - Saffron/Sunset */}
+            {/* Deep Volumetric Atmosphere */}
+            <fog attach="fog" args={['#1a0f0f', 5, 25]} />
+            <ambientLight intensity={isGoldenHour ? 0.3 : 0.1} />
+
+            {/* Sacred Sun/Moon Light */}
             <directionalLight
-                position={[8, 6, 5]}
-                intensity={1.5}
-                color="#f4c430"
+                position={[10, 10, 5]}
+                intensity={isGoldenHour ? 2 : 0.5}
+                color={isGoldenHour ? "#f4c430" : "#8899ff"}
                 castShadow
-                shadow-mapSize-width={2048}
-                shadow-mapSize-height={2048}
+                shadow-mapSize={[2048, 2048]}
             />
 
-            {/* Accent lights - Warm Gold */}
-            <pointLight
-                position={[-5, 3, -5]}
-                intensity={1.2}
-                color="#ffd700"
-            />
-            <pointLight
-                position={[5, 2, 3]}
-                intensity={0.8}
-                color="#ff8c00"
-            />
-
-            {/* Rim light for dramatic effect */}
-            <spotLight
-                position={[0, 10, -8]}
-                intensity={1.5}
-                angle={0.6}
-                penumbra={0.5}
-                color="#ffffff"
-            />
-
-            {/* Interactive Sand with shader */}
+            {/* Ground */}
             <InteractiveSand isGoldenHour={isGoldenHour} />
 
-            {/* Floating Island */}
-            <FloatingIsland />
+            {/* Sacred Focal Point */}
+            <Stupa isGoldenHour={isGoldenHour} />
 
-            {/* Enhanced Bonsai Tree */}
-            <BonsaiTree isGoldenHour={isGoldenHour} />
+            {/* The Bodhi Tree */}
+            <BodhiTree isGoldenHour={isGoldenHour} />
 
-            {/* Crystalline Nodes -> Sacred Objects */}
+            {/* Sacred Floating Objects */}
             <CrystallineNode
                 type="boLeaf"
-                radius={3.2}
-                speed={0.25}
+                radius={4}
+                speed={0.15}
                 offset={0}
-                onHover={handleCrystalHover}
+                onHover={onQuoteHover}
                 isGoldenHour={isGoldenHour}
             />
             <CrystallineNode
                 type="chakra"
-                radius={3.8}
-                speed={0.22}
-                offset={Math.PI / 3}
-                onHover={handleCrystalHover}
+                radius={5}
+                speed={0.12}
+                offset={Math.PI / 2}
+                onHover={onQuoteHover}
                 isGoldenHour={isGoldenHour}
             />
             <CrystallineNode
                 type="boLeaf"
-                radius={4.2}
-                speed={0.2}
-                offset={Math.PI * 2 / 3}
-                onHover={handleCrystalHover}
-                isGoldenHour={isGoldenHour}
-            />
-            <CrystallineNode
-                type="chakra"
-                radius={3.5}
-                speed={0.28}
+                radius={6}
+                speed={0.1}
                 offset={Math.PI}
-                onHover={handleCrystalHover}
+                onHover={onQuoteHover}
                 isGoldenHour={isGoldenHour}
             />
             <CrystallineNode
-                type="boLeaf"
-                radius={4.0}
+                type="chakra"
+                radius={4.5}
                 speed={0.18}
-                offset={Math.PI * 4 / 3}
-                onHover={handleCrystalHover}
+                offset={Math.PI * 1.5}
+                onHover={onQuoteHover}
                 isGoldenHour={isGoldenHour}
             />
 
-            {/* Physics-based floating elements */}
+            {/* Sacred Particles & Lights */}
+            <LotusParticles isGoldenHour={isGoldenHour} />
+
+            {/* Fireflies / Spirit Lights */}
+            {[...Array(15)].map((_, i) => (
+                <Float key={i} position={[(Math.random() - 0.5) * 10, 1 + Math.random() * 3, (Math.random() - 0.5) * 10]}>
+                    <pointLight
+                        intensity={0.5}
+                        distance={3}
+                        color={isGoldenHour ? "#ffaa00" : "#00ffff"}
+                    />
+                </Float>
+            ))}
+
             <PhysicsWorld antiGravity={antiGravity}>
-                <FloatingStone position={[2, 2, 1]} size={0.12} />
-                <FloatingStone position={[-2, 2.5, -1]} size={0.15} />
-                <FloatingStone position={[1, 3, -2]} size={0.1} />
-                <FloatingStone position={[-1.5, 2.8, 1.5]} size={0.13} />
+                {/* Floating Sacred Stones */}
+                <FloatingStone position={[2, 4, 1]} size={0.15} />
+                <FloatingStone position={[-3, 5, -2]} size={0.2} />
+                <FloatingStone position={[1, 6, -3]} size={0.12} />
 
-                <FloatingPetal position={[1.5, 3, 0.5]} color="#ffb3d9" />
-                <FloatingPetal position={[-1, 3.5, -0.5]} color="#ffd1e8" />
-                <FloatingPetal position={[0.5, 3.2, 1]} color="#ffb3d9" />
-                <FloatingPetal position={[-0.8, 3.8, 0.8]} color="#ffc4df" />
-                <FloatingPetal position={[2, 3.3, -1]} color="#ffb3d9" />
+                {/* Floating Lotus Petals */}
+                <FloatingPetal position={[1, 5, 1]} color="#ffb3d9" />
+                <FloatingPetal position={[-2, 6, 0]} color="#ffffff" />
+                <FloatingPetal position={[0, 4, -1]} color="#ffb3d9" />
             </PhysicsWorld>
-
-            {/* Enhanced Starfield */}
-            <Starfield count={400} isGoldenHour={isGoldenHour} />
         </>
     );
 }

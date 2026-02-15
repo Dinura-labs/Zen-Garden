@@ -1,4 +1,4 @@
-// Spatial Audio Chime for Crystalline Nodes
+// Spatial Audio Chime for Sacred Objects
 let audioContext = null;
 let masterGainNode = null;
 
@@ -13,80 +13,73 @@ export function initAudioContext() {
     return audioContext;
 }
 
-// Play spatial chime based on crystal type
-export function playChime(crystalType, position = { x: 0, y: 0, z: 0 }) {
+// Play spatial chime based on sacred object type
+export function playChime(type, position = { x: 0, y: 0, z: 0 }) {
     const ctx = initAudioContext();
 
-    // Resume audio context if suspended (browser requirement)
     if (ctx.state === 'suspended') {
         ctx.resume();
     }
 
-    // Create oscillator for the chime
     const oscillator = ctx.createOscillator();
     const gainNode = ctx.createGain();
     const panner = ctx.createPanner();
 
-    // Set 3D spatial properties
     panner.panningModel = 'HRTF';
     panner.distanceModel = 'inverse';
     panner.refDistance = 1;
-    panner.maxDistance = 10;
-    panner.rolloffFactor = 1;
-    panner.coneInnerAngle = 360;
-    panner.coneOuterAngle = 0;
-    panner.coneOuterGain = 0;
+    panner.maxDistance = 15;
     panner.setPosition(position.x, position.y, position.z);
 
-    // Different frequencies for different crystal types
+    // Tibetan Singing Bowl Frequencies (Hz)
     const frequencies = {
-        tetrahedron: 528,  // C (Solfeggio frequency)
-        icosahedron: 639,  // D#
-        dodecahedron: 741, // F#
-        sphere: 852,       // G#
-        octahedron: 963    // B
+        boLeaf: 432,    // Heart chakra / Natural resonance
+        chakra: 528,    // Transformation / DNA repair
+        tetrahedron: 432,
+        icosahedron: 528,
+        dodecahedron: 639,
+        sphere: 741,
+        octahedron: 852
     };
 
-    const frequency = frequencies[crystalType] || 528;
+    const frequency = frequencies[type] || 432;
 
-    // Configure oscillator  
     oscillator.type = 'sine';
     oscillator.frequency.setValueAtTime(frequency, ctx.currentTime);
 
-    // Add subtle harmonics
-    const harmonic = ctx.createOscillator();
-    harmonic.type = 'sine';
-    harmonic.frequency.setValueAtTime(frequency * 2, ctx.currentTime);
+    // Harmonic layers for richness
+    const harmonic1 = ctx.createOscillator();
+    harmonic1.type = 'sine';
+    harmonic1.frequency.setValueAtTime(frequency * 2.01, ctx.currentTime);
 
-    const harmonicGain = ctx.createGain();
-    harmonicGain.gain.value = 0.2;
+    const harmonic1Gain = ctx.createGain();
+    harmonic1Gain.gain.value = 0.15;
 
-    // Envelope for natural chime sound
+    // Chime envelope
     gainNode.gain.setValueAtTime(0, ctx.currentTime);
-    gainNode.gain.linearRampToValueAtTime(0.5, ctx.currentTime + 0.02);
-    gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 1.5);
+    gainNode.gain.linearRampToValueAtTime(0.4, ctx.currentTime + 0.04);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 2.5);
 
-    harmonicGain.gain.setValueAtTime(0, ctx.currentTime);
-    harmonicGain.gain.linearRampToValueAtTime(0.1, ctx.currentTime + 0.02);
-    harmonicGain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 1.2);
-
-    // Connect audio graph
     oscillator.connect(gainNode);
-    harmonic.connect(harmonicGain);
+    harmonic1.connect(harmonic1Gain);
     gainNode.connect(panner);
-    harmonicGain.connect(panner);
+    harmonic1Gain.connect(panner);
     panner.connect(masterGainNode);
 
-    // Play and stop
     oscillator.start(ctx.currentTime);
-    harmonic.start(ctx.currentTime);
-    oscillator.stop(ctx.currentTime + 1.5);
-    harmonic.stop(ctx.currentTime + 1.2);
+    harmonic1.start(ctx.currentTime);
+    oscillator.stop(ctx.currentTime + 2.6);
+    harmonic1.stop(ctx.currentTime + 2.6);
 }
 
-// Update listener position (camera position)
 export function updateListenerPosition(x, y, z) {
     if (audioContext && audioContext.listener) {
-        audioContext.listener.setPosition(x, y, z);
+        if (audioContext.listener.positionX) {
+            audioContext.listener.positionX.setTargetAtTime(x, audioContext.currentTime, 0.1);
+            audioContext.listener.positionY.setTargetAtTime(y, audioContext.currentTime, 0.1);
+            audioContext.listener.positionZ.setTargetAtTime(z, audioContext.currentTime, 0.1);
+        } else {
+            audioContext.listener.setPosition(x, y, z);
+        }
     }
 }

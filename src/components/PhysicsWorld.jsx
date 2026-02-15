@@ -2,7 +2,7 @@ import React from 'react';
 import { Physics, RigidBody } from '@react-three/rapier';
 import * as THREE from 'three';
 
-// Floating physics-based elements
+// Floating meditation stones - darker and rounder
 export function FloatingStone({ position, size = 0.15 }) {
     return (
         <RigidBody
@@ -14,14 +14,18 @@ export function FloatingStone({ position, size = 0.15 }) {
             angularDamping={0.5}
         >
             <mesh castShadow>
-                <dodecahedronGeometry args={[size, 0]} />
-                <meshStandardMaterial color="#4a4a4a" roughness={0.7} metalness={0.3} />
+                <icosahedronGeometry args={[size, 1]} />
+                <meshStandardMaterial
+                    color="#2c2c2c"
+                    roughness={0.9}
+                    metalness={0.1}
+                />
             </mesh>
         </RigidBody>
     );
 }
 
-// Cherry blossom petal
+// Lotus petal - delicate and curved
 export function FloatingPetal({ position, color }) {
     return (
         <RigidBody
@@ -29,17 +33,18 @@ export function FloatingPetal({ position, color }) {
             colliders="cuboid"
             restitution={0.3}
             friction={0.05}
-            linearDamping={0.8}
-            angularDamping={0.8}
+            linearDamping={1.2}
+            angularDamping={1.2}
             mass={0.01}
         >
-            <mesh castShadow>
-                <boxGeometry args={[0.1, 0.05, 0.02]} />
+            <mesh castShadow rotation={[Math.random(), Math.random(), Math.random()]}>
+                <sphereGeometry args={[0.08, 16, 16, 0, Math.PI, 0, Math.PI / 2]} />
                 <meshStandardMaterial
                     color={color || '#ffb3d9'}
                     transparent
-                    opacity={0.8}
-                    roughness={0.4}
+                    opacity={0.9}
+                    roughness={0.5}
+                    side={THREE.DoubleSide}
                 />
             </mesh>
         </RigidBody>
@@ -48,7 +53,7 @@ export function FloatingPetal({ position, color }) {
 
 // Physics World Wrapper
 export function PhysicsWorld({ children, antiGravity }) {
-    const gravity = antiGravity ? [0, 0, 0] : [0, -2, 0];
+    const gravity = antiGravity ? [0, 0, 0] : [0, -1.5, 0];
 
     return (
         <Physics gravity={gravity} debug={false}>

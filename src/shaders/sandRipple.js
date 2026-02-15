@@ -13,12 +13,11 @@ export const sandVertexShader = `
     float dist = distance(uv, uMouse);
     
     // Create multiple ripples
-    float ripple1 = sin(dist * 15.0 - uTime * 3.0) * exp(-dist * 3.0);
-    float ripple2 = sin(dist * 20.0 - uTime * 4.0) * exp(-dist * 4.0);
-    float ripple3 = sin(dist * 25.0 - uTime * 5.0) * exp(-dist * 5.0);
+    float ripple1 = sin(dist * 12.0 - uTime * 2.0) * exp(-dist * 4.0);
+    float ripple2 = sin(dist * 18.0 - uTime * 3.0) * exp(-dist * 5.0);
     
     // Combine ripples
-    float elevation = (ripple1 + ripple2 * 0.5 + ripple3 * 0.3) * 0.15;
+    float elevation = (ripple1 + ripple2 * 0.5) * 0.12;
     
     vElevation = elevation;
     pos.z += elevation;
@@ -36,32 +35,27 @@ export const sandFragmentShader = `
   varying float vElevation;
 
   void main() {
-    // Base sand color
-    vec3 sandColor = uIsGoldenHour 
-      ? vec3(0.85, 0.75, 0.6)   // Warm golden sand
-      : vec3(0.4, 0.45, 0.5);    // Cool neon-noir sand
+    // Base sand color - warm golden/earthy
+    vec3 sandColor = vec3(0.5, 0.35, 0.2) + vec3(0.1, 0.08, 0.0) * sin(vUv.x * 20.0);
     
-    // Glow color for ripples
-    vec3 glowColor = uIsGoldenHour
-      ? vec3(1.0, 0.6, 0.2)      // Warm orange glow
-      : vec3(0.0, 1.0, 1.0);      // Cyan glow
+    // Glow color for ripples - pure gold
+    vec3 glowColor = vec3(1.0, 0.8, 0.2);
     
     // Calculate distance from mouse
     float dist = distance(vUv, uMouse);
     
-    // Animated glow ring
-    float ring = smoothstep(0.05, 0.0, abs(dist - mod(uTime * 0.3, 1.0))) * (1.0 - dist);
-    
     // Elevation-based glow
-    float elevationGlow = abs(vElevation) * 8.0;
+    float elevationGlow = abs(vElevation) * 12.0;
+    
+    // Subtle mandala-like pulsing ring
+    float ring = smoothstep(0.08, 0.0, abs(dist - mod(uTime * 0.2, 2.0))) * (1.0 - dist);
     
     // Combine colors
-    vec3 finalColor = sandColor + glowColor * (elevationGlow + ring * 0.8);
+    vec3 finalColor = sandColor + glowColor * (elevationGlow * 0.6 + ring * 0.4);
     
-    // Add subtle sparkle
-    float sparkle = fract(sin(dot(vUv * 100.0, vec2(12.9898, 78.233))) * 43758.5453);
-    sparkle = step(0.98, sparkle) * 0.3;
-    finalColor += vec3(sparkle);
+    // Add fine sand grain texture
+    float grains = fract(sin(dot(vUv * 500.0, vec2(12.9898, 78.233))) * 43758.5453);
+    finalColor += vec3(grains * 0.05);
     
     gl_FragColor = vec4(finalColor, 1.0);
   }

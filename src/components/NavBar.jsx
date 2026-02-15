@@ -5,10 +5,10 @@ function NavBar() {
     <nav className="navbar">
       <div className="navbar-container">
         <div className="navbar-logo">
-          <span className="zen-symbol">☯</span>
-          <span className="site-name">Zen Garden</span>
+          <span className="zen-symbol">☸</span>
+          <span className="site-name">Buddhist Oasis</span>
         </div>
-        
+
         <ul className="navbar-menu">
           <li className="navbar-item">
             <a href="#home" className="navbar-link">Home</a>

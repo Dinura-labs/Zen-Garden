@@ -136,15 +136,23 @@ export default function HeroSection() {
                     transition={{ duration: 1.5 }}
                     className="text-center z-10"
                 >
-                    <DecryptedText text="Buddhist Oasis" delay={0.5} />
+                    <div className="relative">
+                        <motion.div
+                            initial={{ scale: 0.8, opacity: 0 }}
+                            animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.4, 0.2] }}
+                            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                            className="absolute inset-0 bg-yellow-500/20 blur-3xl rounded-full"
+                        />
+                        <DecryptedText text="Buddhist Oasis" delay={0.5} />
+                    </div>
 
                     <motion.p
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 1.5 }}
-                        className="text-lg md:text-2xl text-gray-300 mt-6 font-inter font-light tracking-wide"
+                        className="text-lg md:text-2xl text-yellow-100/80 mt-6 font-lora font-light tracking-widest italic"
                     >
-                        Enlightenment Through Digital Mindfulness
+                        Inner Peace Through Digital Mindfulness
                     </motion.p>
 
                     <motion.div
