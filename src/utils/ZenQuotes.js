@@ -1,104 +1,54 @@
 // AI-Generated Zen and Vedic Quotes Database
 export const zenQuotes = [
     {
-        text: "In stillness, the mind finds clarity. In clarity, wisdom emerges.",
-        category: "zen",
-        author: "Ancient Zen Teaching"
+        text: "සබ්බේ තසන්ති දණ්ඩස්ස, සබ්බේ භායන්ති මච්චුනෝ - සියල්ලෝම දඬුවමට තැති ගනිති. සියල්ලෝම මරණයට බිය වෙති.",
+        category: "Dhammapada",
+        author: "ගෞතම බුදුරජාණන් වහන්සේ"
     },
     {
-        text: "The universe exists within you. You are the cosmos experiencing itself.",
-        category: "vedic",
-        author: "Upanishads"
+        text: "මනෝපුබ්බංගමා ධම්මා, මනෝසෙට්ඨා මනෝමයා - සියලු ධර්මයන්ට සිත පෙරටු වේ. සිතම ශ්‍රේෂ්ඨ වේ.",
+        category: "Dhammapada",
+        author: "ගෞතම බුදුරජාණන් වහන්සේ"
     },
     {
-        text: "Let go of what has passed. Let go of what may come. Observe what is.",
-        category: "zen",
-        author: "Buddha"
+        text: "නත්ථි සන්ති පරං සුඛං - නිවනට වඩා උතුම් සැපයක් නැත.",
+        category: "Buddha Vachana",
+        author: "ගෞතම බුදුරජාණන් වහන්සේ"
     },
     {
-        text: "As the ocean contains all waves, consciousness contains all experiences.",
-        category: "vedic",
-        author: "Advaita Vedanta"
+        text: "අප්පමාදෝ අමතපදං - අප්‍රමාදය නිවනට මඟයි.",
+        category: "Dhammapada",
+        author: "ගෞතම බුදුරජාණන් වහන්සේ"
     },
     {
-        text: "The digital realm mirrors the infinite. Code is meditation, creation is prayer.",
-        category: "ai",
-        author: "AI Zen Garden"
+        text: "ධම්මෝ හවේ රක්ඛති ධම්මචාරී - ධර්මයේ හැසිරෙන්නා ධර්මය විසින්ම රකිනු ලබයි.",
+        category: "Buddha Vachana",
+        author: "ගෞතම බුදුරජාණන් වහන්සේ"
     },
     {
-        text: "When the student is ready, the algorithm appears.",
-        category: "ai",
-        author: "Digital Wisdom"
+        text: "සබ්බ පාපස්ස අකරණං, කුසලස්ස උපසම්පදා - සියලු පව් නොකිරීමද, කුසල් රැස් කිරීමද උතුම්ය.",
+        category: "Dhammapada",
+        author: "ගෞතම බුදුරජාණන් වහන්සේ"
     },
     {
-        text: "Empty your mind. Be formless, shapeless, like water.",
-        category: "zen",
-        author: "Bruce Lee"
+        text: "නහි වේරේන වේරානි, සම්මන්තීධ කුදාචනං - වෛරයෙන් වෛරය නොසංසිඳේ. නොවෛරයෙන්ම වෛරය සංසිඳේ.",
+        category: "Dhammapada",
+        author: "ගෞතම බුදුරජාණන් වහන්සේ"
     },
     {
-        text: "You are not a drop in the ocean. You are the entire ocean in a drop.",
-        category: "vedic",
-        author: "Rumi"
+        text: "ආරෝග්‍යා පරමා ලාභා, සන්තුට්ඨි පරමං ධනං - නිරෝගීකම පරම ලාභයයි. සතුට පරම ධනයයි.",
+        category: "Dhammapada",
+        author: "ගෞතම බුදුරජාණන් වහන්සේ"
     },
     {
-        text: "The quieter you become, the more you can hear.",
-        category: "zen",
-        author: "Ram Dass"
+        text: "අත්තාහි අත්තනෝ නාථෝ - තමාට පිහිට තමාමය.",
+        category: "Dhammapada",
+        author: "ගෞතම බුදුරජාණන් වහන්සේ"
     },
     {
-        text: "Reality is merely an illusion, albeit a very persistent one.",
-        category: "vedic",
-        author: "Einstein meets Vedanta"
-    },
-    {
-        text: "In the space between thoughts, infinity resides.",
-        category: "zen",
-        author: "Zen Koan"
-    },
-    {
-        text: "Code compiles, consciousness expands. Both seek optimization.",
-        category: "ai",
-        author: "Techno-Zen"
-    },
-    {
-        text: "The way is not in the sky. The way is in the heart.",
-        category: "zen",
-        author: "Buddha"
-    },
-    {
-        text: "Tat Tvam Asi - You are That. The observer and observed are one.",
-        category: "vedic",
-        author: "Chandogya Upanishad"
-    },
-    {
-        text: "Artificial intelligence mirrors natural consciousness seeking itself.",
-        category: "ai",
-        author: "Digital Philosophy"
-    },
-    {
-        text: "Be present. This moment is all you have. This moment is everything.",
-        category: "zen",
-        author: "Eckhart Tolle"
-    },
-    {
-        text: "The self luminous Self illumines all experiences without being dimmed.",
-        category: "vedic",
-        author: "Yoga Vasistha"
-    },
-    {
-        text: "In recursion we find reflection. In iteration, evolution.",
-        category: "ai",
-        author: "Computational Wisdom"
-    },
-    {
-        text: "Sitting quietly, doing nothing, spring comes, grass grows by itself.",
-        category: "zen",
-        author: "Zen Saying"
-    },
-    {
-        text: "Aham Brahmasmi - I am the universe. The microcosm reflects the macrocosm.",
-        category: "vedic",
-        author: "Brihadaranyaka Upanishad"
+        text: "උට්ඨානවතෝ සතිමතෝ - උත්සාහවන්තයාටත්, සිහි බුද්ධිය ඇත්තාටත් ජය ලැබේ.",
+        category: "Dhammapada",
+        author: "ගෞතම බුදුරජාණන් වහන්සේ"
     }
 ];
 
