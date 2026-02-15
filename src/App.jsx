@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import NavBar from './components/NavBar'
 import HeroSection from './components/HeroSection'
+import MeditationBackground from './components/MeditationBackground'
 import './App.css'
 
 function App() {
@@ -8,6 +9,7 @@ function App() {
     <>
       <NavBar />
       <HeroSection />
+      <MeditationBackground />
     </>
   )
 }

@@ -19,9 +19,9 @@ export function FloatingIsland() {
         <mesh ref={meshRef} position={[0, -0.3, 0]} castShadow receiveShadow>
             <dodecahedronGeometry args={[1.8, 2]} />
             <meshStandardMaterial
-                color="#3a3a3a"
-                roughness={0.85}
-                metalness={0.15}
+                color="#5a4d41"
+                roughness={0.9}
+                metalness={0.05}
             />
         </mesh>
     );
@@ -173,35 +173,35 @@ export default function Scene3D({ antiGravity, onQuoteHover }) {
             {/* Time-based Lighting System */}
             <ambientLight intensity={isGoldenHour ? 0.4 : 0.25} />
 
-            {/* Main directional light - time responsive */}
+            {/* Main directional light - Saffron/Sunset */}
             <directionalLight
-                position={isGoldenHour ? [8, 6, 5] : [-8, 5, 5]}
-                intensity={isGoldenHour ? 1.2 : 0.6}
-                color={isGoldenHour ? '#ffaa66' : '#8899ff'}
+                position={[8, 6, 5]}
+                intensity={1.5}
+                color="#f4c430"
                 castShadow
                 shadow-mapSize-width={2048}
                 shadow-mapSize-height={2048}
             />
 
-            {/* Accent lights */}
+            {/* Accent lights - Warm Gold */}
             <pointLight
                 position={[-5, 3, -5]}
-                intensity={isGoldenHour ? 0.6 : 1.2}
-                color={isGoldenHour ? '#ff8844' : '#00ddff'}
+                intensity={1.2}
+                color="#ffd700"
             />
             <pointLight
                 position={[5, 2, 3]}
-                intensity={0.5}
-                color={isGoldenHour ? '#ffcc88' : '#ff00ff'}
+                intensity={0.8}
+                color="#ff8c00"
             />
 
             {/* Rim light for dramatic effect */}
             <spotLight
-                position={[0, 8, -8]}
-                intensity={isGoldenHour ? 0.8 : 1.5}
+                position={[0, 10, -8]}
+                intensity={1.5}
                 angle={0.6}
                 penumbra={0.5}
-                color={isGoldenHour ? '#ffffff' : '#00ffff'}
+                color="#ffffff"
             />
 
             {/* Interactive Sand with shader */}
@@ -213,9 +213,9 @@ export default function Scene3D({ antiGravity, onQuoteHover }) {
             {/* Enhanced Bonsai Tree */}
             <BonsaiTree isGoldenHour={isGoldenHour} />
 
-            {/* Crystalline Nodes */}
+            {/* Crystalline Nodes -> Sacred Objects */}
             <CrystallineNode
-                type="tetrahedron"
+                type="boLeaf"
                 radius={3.2}
                 speed={0.25}
                 offset={0}
@@ -223,7 +223,7 @@ export default function Scene3D({ antiGravity, onQuoteHover }) {
                 isGoldenHour={isGoldenHour}
             />
             <CrystallineNode
-                type="icosahedron"
+                type="chakra"
                 radius={3.8}
                 speed={0.22}
                 offset={Math.PI / 3}
@@ -231,7 +231,7 @@ export default function Scene3D({ antiGravity, onQuoteHover }) {
                 isGoldenHour={isGoldenHour}
             />
             <CrystallineNode
-                type="dodecahedron"
+                type="boLeaf"
                 radius={4.2}
                 speed={0.2}
                 offset={Math.PI * 2 / 3}
@@ -239,7 +239,7 @@ export default function Scene3D({ antiGravity, onQuoteHover }) {
                 isGoldenHour={isGoldenHour}
             />
             <CrystallineNode
-                type="sphere"
+                type="chakra"
                 radius={3.5}
                 speed={0.28}
                 offset={Math.PI}
@@ -247,7 +247,7 @@ export default function Scene3D({ antiGravity, onQuoteHover }) {
                 isGoldenHour={isGoldenHour}
             />
             <CrystallineNode
-                type="octahedron"
+                type="boLeaf"
                 radius={4.0}
                 speed={0.18}
                 offset={Math.PI * 4 / 3}
