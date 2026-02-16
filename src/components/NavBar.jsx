@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link, NavLink } from 'react-router-dom';
 import './NavBar.css';
 
 function NavBar() {
@@ -8,29 +9,64 @@ function NavBar() {
     setMenuOpen(!menuOpen);
   };
 
+  const closeMenu = () => {
+    setMenuOpen(false);
+  };
+
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        <div className="navbar-logo">
+        <Link to="/" className="navbar-logo" onClick={closeMenu}>
           <span className="zen-symbol">☸</span>
           <span className="site-name">Buddhist Oasis</span>
-        </div>
+        </Link>
 
         <ul className={`navbar-menu ${menuOpen ? 'active' : ''}`}>
           <li className="navbar-item">
-            <a href="#home" className="navbar-link" onClick={() => setMenuOpen(false)}>Home</a>
+            <NavLink
+              to="/"
+              className={({ isActive }) => `navbar-link ${isActive ? 'active' : ''}`}
+              onClick={closeMenu}
+              end
+            >
+              Home
+            </NavLink>
           </li>
           <li className="navbar-item">
-            <a href="#gallery" className="navbar-link" onClick={() => setMenuOpen(false)}>Gallery</a>
+            <NavLink
+              to="/gallery"
+              className={({ isActive }) => `navbar-link ${isActive ? 'active' : ''}`}
+              onClick={closeMenu}
+            >
+              Gallery
+            </NavLink>
           </li>
           <li className="navbar-item">
-            <a href="#meditation" className="navbar-link" onClick={() => setMenuOpen(false)}>Meditation</a>
+            <NavLink
+              to="/meditation"
+              className={({ isActive }) => `navbar-link ${isActive ? 'active' : ''}`}
+              onClick={closeMenu}
+            >
+              Meditation
+            </NavLink>
           </li>
           <li className="navbar-item">
-            <a href="#about" className="navbar-link" onClick={() => setMenuOpen(false)}>About</a>
+            <NavLink
+              to="/about"
+              className={({ isActive }) => `navbar-link ${isActive ? 'active' : ''}`}
+              onClick={closeMenu}
+            >
+              About
+            </NavLink>
           </li>
           <li className="navbar-item">
-            <a href="#contact" className="navbar-link" onClick={() => setMenuOpen(false)}>Contact</a>
+            <NavLink
+              to="/contact"
+              className={({ isActive }) => `navbar-link ${isActive ? 'active' : ''}`}
+              onClick={closeMenu}
+            >
+              Contact
+            </NavLink>
           </li>
         </ul>
 
@@ -49,4 +85,5 @@ function NavBar() {
 }
 
 export default NavBar;
+
 

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import './Footer.css';
 
 function Footer() {
@@ -35,21 +36,21 @@ function Footer() {
                     <div className="footer-section">
                         <h4 className="section-title">Quick Links</h4>
                         <ul className="footer-links">
-                            <li><a href="#home" className="footer-link">Home</a></li>
-                            <li><a href="#gallery" className="footer-link">Gallery</a></li>
-                            <li><a href="#meditation" className="footer-link">Meditation</a></li>
-                            <li><a href="#about" className="footer-link">About</a></li>
-                            <li><a href="#contact" className="footer-link">Contact</a></li>
+                            <li><Link to="/" className="footer-link">Home</Link></li>
+                            <li><Link to="/gallery" className="footer-link">Gallery</Link></li>
+                            <li><Link to="/meditation" className="footer-link">Meditation</Link></li>
+                            <li><Link to="/about" className="footer-link">About</Link></li>
+                            <li><Link to="/contact" className="footer-link">Contact</Link></li>
                         </ul>
                     </div>
 
                     <div className="footer-section">
                         <h4 className="section-title">Connect</h4>
                         <ul className="footer-links">
-                            <li><a href="#" className="footer-link">Community</a></li>
-                            <li><a href="#" className="footer-link">Resources</a></li>
-                            <li><a href="#" className="footer-link">Support</a></li>
-                            <li><a href="#" className="footer-link">Newsletter</a></li>
+                            <li><Link to="/about" className="footer-link">Community</Link></li>
+                            <li><Link to="/about" className="footer-link">Resources</Link></li>
+                            <li><Link to="/contact" className="footer-link">Support</Link></li>
+                            <li><Link to="/contact" className="footer-link">Newsletter</Link></li>
                         </ul>
                     </div>
 
@@ -85,3 +86,4 @@ function Footer() {
 }
 
 export default Footer;
+

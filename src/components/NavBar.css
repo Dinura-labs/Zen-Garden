@@ -146,17 +146,20 @@
   z-index: -1;
 }
 
-.navbar-link:hover {
+.navbar-link:hover,
+.navbar-link.active {
   color: #ffd700;
   transform: translateY(-2px);
   text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
 }
 
-.navbar-link:hover::before {
+.navbar-link:hover::before,
+.navbar-link.active::before {
   width: 100%;
 }
 
-.navbar-link:hover::after {
+.navbar-link:hover::after,
+.navbar-link.active::after {
   opacity: 1;
 }
 
