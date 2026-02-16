@@ -1,6 +1,13 @@
+import { useState } from 'react';
 import './NavBar.css';
 
 function NavBar() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
+
   return (
     <nav className="navbar">
       <div className="navbar-container">
@@ -9,25 +16,29 @@ function NavBar() {
           <span className="site-name">Buddhist Oasis</span>
         </div>
 
-        <ul className="navbar-menu">
+        <ul className={`navbar-menu ${menuOpen ? 'active' : ''}`}>
           <li className="navbar-item">
-            <a href="#home" className="navbar-link">Home</a>
+            <a href="#home" className="navbar-link" onClick={() => setMenuOpen(false)}>Home</a>
           </li>
           <li className="navbar-item">
-            <a href="#gallery" className="navbar-link">Gallery</a>
+            <a href="#gallery" className="navbar-link" onClick={() => setMenuOpen(false)}>Gallery</a>
           </li>
           <li className="navbar-item">
-            <a href="#meditation" className="navbar-link">Meditation</a>
+            <a href="#meditation" className="navbar-link" onClick={() => setMenuOpen(false)}>Meditation</a>
           </li>
           <li className="navbar-item">
-            <a href="#about" className="navbar-link">About</a>
+            <a href="#about" className="navbar-link" onClick={() => setMenuOpen(false)}>About</a>
           </li>
           <li className="navbar-item">
-            <a href="#contact" className="navbar-link">Contact</a>
+            <a href="#contact" className="navbar-link" onClick={() => setMenuOpen(false)}>Contact</a>
           </li>
         </ul>
 
-        <button className="navbar-toggle" aria-label="Toggle menu">
+        <button
+          className="navbar-toggle"
+          aria-label="Toggle menu"
+          onClick={toggleMenu}
+        >
           <span className="hamburger-line"></span>
           <span className="hamburger-line"></span>
           <span className="hamburger-line"></span>
@@ -38,3 +49,4 @@ function NavBar() {
 }
 
 export default NavBar;
+
