@@ -1,203 +1,220 @@
-import { motion } from 'framer-motion';
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import './styles.css';
 
 function Contact() {
-    const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-        message: '',
-    });
+    const [formData, setFormData] = useState({ name: '', email: '', message: '' });
     const [errors, setErrors] = useState({});
     const [submitted, setSubmitted] = useState(false);
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({
-            ...prev,
-            [name]: value,
-        }));
-        // Clear error when user starts typing
-        if (errors[name]) {
-            setErrors((prev) => ({
-                ...prev,
-                [name]: '',
-            }));
-        }
-    };
-
-    const validateForm = () => {
+    const validate = () => {
         const newErrors = {};
-
-        if (!formData.name.trim()) {
-            newErrors.name = 'Name is required';
+        if (!formData.name) newErrors.name = 'Please enter your name';
+        if (!formData.email || !/\S+@\S+\.\S+/.test(formData.email)) {
+            newErrors.email = 'Valid email is required';
         }
-
-        if (!formData.email.trim()) {
-            newErrors.email = 'Email is required';
-        } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-            newErrors.email = 'Email is invalid';
-        }
-
-        if (!formData.message.trim()) {
-            newErrors.message = 'Message is required';
-        }
-
+        if (!formData.message) newErrors.message = 'Please share your thoughts';
         return newErrors;
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const newErrors = validateForm();
-
-        if (Object.keys(newErrors).length > 0) {
-            setErrors(newErrors);
-        } else {
-            // Form is valid - simulate submission
-            console.log('Form submitted:', formData);
+        const validationErrors = validate();
+        if (Object.keys(validationErrors).length === 0) {
             setSubmitted(true);
+            // Reset form data after submission
             setFormData({ name: '', email: '', message: '' });
-            setTimeout(() => setSubmitted(false), 5000);
+            setErrors({});
+        } else {
+            setErrors(validationErrors);
         }
     };
 
     return (
-        <div className="page contact-page">
+        <motion.div
+            className="page contact-page"
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.02 }}
+            transition={{ duration: 0.6 }}
+        >
             <div className="page-header">
-                <motion.h1
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8 }}
-                    className="page-title"
-                >
-                    <span className="dharma-icon">📬</span>
-                    Contact Us
-                </motion.h1>
-                <motion.p
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.2 }}
-                    className="page-subtitle"
-                >
-                    Connect with our community and share your journey
-                </motion.p>
+                <h1 className="page-title">
+                    <span className="title-icon">✉️</span>
+                    Connect With Us
+                </h1>
+                <p className="page-subtitle">We are here to support your path</p>
             </div>
 
-            <div className="contact-container">
+            <div className="contact-container" style={{
+                maxWidth: "1200px",
+                margin: "0 auto",
+                display: "grid",
+                gridTemplateColumns: "1fr 1.5fr",
+                gap: "3rem",
+                paddingBottom: "5rem"
+            }}>
                 <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.8, delay: 0.3 }}
                     className="glass-card contact-info"
+                    initial={{ x: -20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: 0.2 }}
                 >
-                    <h2 className="section-heading">Get in Touch</h2>
-                    <p className="section-text">
-                        We'd love to hear from you! Whether you have questions, feedback, or just want
-                        to share your meditation experiences, feel free to reach out.
-                    </p>
-
-                    <div className="contact-methods">
-                        <div className="contact-method">
-                            <span className="method-icon">📧</span>
-                            <div className="method-details">
-                                <h3 className="method-title">Email</h3>
-                                <p className="method-value">contact@buddhistoasis.com</p>
-                            </div>
+                    <div className="contact-method" style={{ display: "flex", gap: "1.5rem", marginBottom: "2.5rem" }}>
+                        <div className="method-icon" style={{
+                            fontSize: "2rem",
+                            background: "rgba(255, 215, 0, 0.1)",
+                            width: "60px",
+                            height: "60px",
+                            borderRadius: "15px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center"
+                        }}>📍</div>
+                        <div>
+                            <h4 className="method-title" style={{ color: "#ffd700", fontSize: "1.2rem", marginBottom: "0.25rem" }}>Global Community</h4>
+                            <p className="method-value" style={{ opacity: 0.7 }}>Connecting spirits worldwide</p>
                         </div>
-
-                        <div className="contact-method">
-                            <span className="method-icon">💬</span>
-                            <div className="method-details">
-                                <h3 className="method-title">Community</h3>
-                                <p className="method-value">Join our meditation community</p>
-                            </div>
+                    </div>
+                    <div className="contact-method" style={{ display: "flex", gap: "1.5rem", marginBottom: "2.5rem" }}>
+                        <div className="method-icon" style={{
+                            fontSize: "2rem",
+                            background: "rgba(255, 215, 0, 0.1)",
+                            width: "60px",
+                            height: "60px",
+                            borderRadius: "15px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center"
+                        }}>📧</div>
+                        <div>
+                            <h4 className="method-title" style={{ color: "#ffd700", fontSize: "1.2rem", marginBottom: "0.25rem" }}>Email Us</h4>
+                            <p className="method-value" style={{ opacity: 0.7 }}>peace@buddhistoasis.com</p>
                         </div>
-
-                        <div className="contact-method">
-                            <span className="method-icon">🌐</span>
-                            <div className="method-details">
-                                <h3 className="method-title">Social Media</h3>
-                                <p className="method-value">Follow us on social platforms</p>
-                            </div>
+                    </div>
+                    <div className="contact-method" style={{ display: "flex", gap: "1.5rem" }}>
+                        <div className="method-icon" style={{
+                            fontSize: "2rem",
+                            background: "rgba(255, 215, 0, 0.1)",
+                            width: "60px",
+                            height: "60px",
+                            borderRadius: "15px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center"
+                        }}>📱</div>
+                        <div>
+                            <h4 className="method-title" style={{ color: "#ffd700", fontSize: "1.2rem", marginBottom: "0.25rem" }}>Sangha Support</h4>
+                            <p className="method-value" style={{ opacity: 0.7 }}>Available for meditation guidance</p>
                         </div>
                     </div>
                 </motion.div>
 
                 <motion.div
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.8, delay: 0.5 }}
                     className="glass-card contact-form-container"
+                    initial={{ x: 20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: 0.4 }}
                 >
-                    <h2 className="section-heading">Send a Message</h2>
-
-                    {submitted && (
+                    {submitted ? (
                         <motion.div
-                            initial={{ opacity: 0, y: -10 }}
-                            animate={{ opacity: 1, y: 0 }}
                             className="success-message"
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            style={{ textAlign: "center", padding: "3rem" }}
                         >
-                            ✓ Thank you! Your message has been received. We'll respond soon.
+                            <h3 style={{ color: "#ffd700", fontSize: "2rem", marginBottom: "1rem" }}>With Metta, thank you.</h3>
+                            <p style={{ fontSize: "1.1rem", marginBottom: "2rem" }}>Your reflection has been received with peace. We will respond in mindfulness soon.</p>
+                            <button
+                                className="duration-btn"
+                                onClick={() => setSubmitted(false)}
+                                style={{
+                                    padding: "0.75rem 2rem",
+                                    borderRadius: "50px",
+                                    border: "1px solid #ffd700",
+                                    background: "transparent",
+                                    color: "#ffd700",
+                                    cursor: "pointer"
+                                }}
+                            >
+                                Send another message
+                            </button>
                         </motion.div>
+                    ) : (
+                        <form className="contact-form" onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+                            <div className="form-group" style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                                <label className="form-label" style={{ opacity: 0.6, fontSize: "0.9rem" }}>Dharma Name / Full Name</label>
+                                <input
+                                    type="text"
+                                    className={`form-input ${errors.name ? 'error' : ''}`}
+                                    value={formData.name}
+                                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                    style={{
+                                        padding: "1rem",
+                                        borderRadius: "10px",
+                                        background: "rgba(255, 255, 255, 0.05)",
+                                        border: errors.name ? "1px solid #ff4444" : "1px solid rgba(255, 255, 255, 0.1)",
+                                        color: "white"
+                                    }}
+                                />
+                                {errors.name && <span className="error-text" style={{ color: "#ff4444", fontSize: "0.8rem" }}>{errors.name}</span>}
+                            </div>
+                            <div className="form-group" style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                                <label className="form-label" style={{ opacity: 0.6, fontSize: "0.9rem" }}>Email Address</label>
+                                <input
+                                    type="email"
+                                    className={`form-input ${errors.email ? 'error' : ''}`}
+                                    value={formData.email}
+                                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                    style={{
+                                        padding: "1rem",
+                                        borderRadius: "10px",
+                                        background: "rgba(255, 255, 255, 0.05)",
+                                        border: errors.email ? "1px solid #ff4444" : "1px solid rgba(255, 255, 255, 0.1)",
+                                        color: "white"
+                                    }}
+                                />
+                                {errors.email && <span className="error-text" style={{ color: "#ff4444", fontSize: "0.8rem" }}>{errors.email}</span>}
+                            </div>
+                            <div className="form-group" style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                                <label className="form-label" style={{ opacity: 0.6, fontSize: "0.9rem" }}>Your Reflection / Query</label>
+                                <textarea
+                                    className={`form-input form-textarea ${errors.message ? 'error' : ''}`}
+                                    rows="5"
+                                    value={formData.message}
+                                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                                    style={{
+                                        padding: "1rem",
+                                        borderRadius: "10px",
+                                        background: "rgba(255, 255, 255, 0.05)",
+                                        border: errors.message ? "1px solid #ff4444" : "1px solid rgba(255, 255, 255, 0.1)",
+                                        color: "white",
+                                        resize: "none"
+                                    }}
+                                />
+                                {errors.message && <span className="error-text" style={{ color: "#ff4444", fontSize: "0.8rem" }}>{errors.message}</span>}
+                            </div>
+                            <button
+                                type="submit"
+                                className="form-submit"
+                                style={{
+                                    background: "#ffd700",
+                                    color: "#1a0f0f",
+                                    padding: "1rem",
+                                    borderRadius: "50px",
+                                    fontWeight: "bold",
+                                    border: "none",
+                                    cursor: "pointer",
+                                    marginTop: "1rem"
+                                }}
+                            >
+                                Submit Reflection
+                            </button>
+                        </form>
                     )}
-
-                    <form onSubmit={handleSubmit} className="contact-form">
-                        <div className="form-group">
-                            <label htmlFor="name" className="form-label">
-                                Name
-                            </label>
-                            <input
-                                type="text"
-                                id="name"
-                                name="name"
-                                value={formData.name}
-                                onChange={handleChange}
-                                className={`form-input ${errors.name ? 'error' : ''}`}
-                                placeholder="Your name"
-                            />
-                            {errors.name && <span className="error-text">{errors.name}</span>}
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="email" className="form-label">
-                                Email
-                            </label>
-                            <input
-                                type="email"
-                                id="email"
-                                name="email"
-                                value={formData.email}
-                                onChange={handleChange}
-                                className={`form-input ${errors.email ? 'error' : ''}`}
-                                placeholder="your.email@example.com"
-                            />
-                            {errors.email && <span className="error-text">{errors.email}</span>}
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="message" className="form-label">
-                                Message
-                            </label>
-                            <textarea
-                                id="message"
-                                name="message"
-                                value={formData.message}
-                                onChange={handleChange}
-                                className={`form-textarea ${errors.message ? 'error' : ''}`}
-                                placeholder="Share your thoughts..."
-                                rows="6"
-                            />
-                            {errors.message && <span className="error-text">{errors.message}</span>}
-                        </div>
-
-                        <button type="submit" className="form-submit">
-                            <span className="btn-icon">📤</span>
-                            Send Message
-                        </button>
-                    </form>
                 </motion.div>
             </div>
-        </div>
+        </motion.div>
     );
 }
 

@@ -1,106 +1,66 @@
-import { motion } from 'framer-motion';
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import './styles.css';
 
-function Gallery() {
-    const [selectedImage, setSelectedImage] = useState(null);
+// Import premium assets
+import buddhaImg from '../assets/buddha_statue_premium_v2_1771263963579.png';
+import bellImg from '../assets/temple_bell_premium_v2_1771264009551.png';
+import hallImg from '../assets/meditation_hall_premium_v2_1771264039485.png';
+import treeImg from '../assets/bodhi_tree_premium_v2_1771264056233.png';
+import wheelsImg from '../assets/prayer_wheels_premium_v2_1771264089351.png';
+import incenseImg from '../assets/incense_burner_premium_v2_1771264110917.png';
+import gardenImg from '../assets/zen_garden_premium_final_1771264149017.png';
+import lotusImg from '../assets/lotus_flower_premium_final_1771264185767.png';
 
-    const galleryItems = [
-        {
-            id: 1,
-            title: 'Buddha Statue',
-            description: 'Ancient stone Buddha in meditation',
-            category: 'Statues',
-        },
-        {
-            id: 2,
-            title: 'Zen Garden',
-            description: 'Traditional Japanese rock garden',
-            category: 'Gardens',
-        },
-        {
-            id: 3,
-            title: 'Lotus Flower',
-            description: 'Symbol of purity and enlightenment',
-            category: 'Nature',
-        },
-        {
-            id: 4,
-            title: 'Temple Bells',
-            description: 'Sacred bells of mindfulness',
-            category: 'Architecture',
-        },
-        {
-            id: 5,
-            title: 'Meditation Hall',
-            description: 'Peaceful sanctuary for practice',
-            category: 'Architecture',
-        },
-        {
-            id: 6,
-            title: 'Bodhi Tree',
-            description: 'Tree of enlightenment',
-            category: 'Nature',
-        },
-        {
-            id: 7,
-            title: 'Prayer Wheels',
-            description: 'Spinning wheels of wisdom',
-            category: 'Sacred Objects',
-        },
-        {
-            id: 8,
-            title: 'Incense Burner',
-            description: 'Aromatic offerings of devotion',
-            category: 'Sacred Objects',
-        },
-    ];
+const galleryItems = [
+    { id: 1, title: 'Ancient Wisdom', category: 'Statues', description: 'Hand-carved stone Buddha in deep dhyana mudra, reflecting eternal peace.', image: buddhaImg },
+    { id: 2, title: 'Stone Sanctuary', category: 'Gardens', description: 'A perfectly raked Zen garden representing the stillness of the mind.', image: gardenImg },
+    { id: 3, title: 'Radiant Lotus', category: 'Nature', description: 'The sacred lotus blooming in purity, untouched by the surrounding waters.', image: lotusImg },
+    { id: 4, title: 'Silent Hall', category: 'Architecture', description: 'A traditional meditation hall where thousands have found their inner light.', image: hallImg },
+    { id: 5, title: 'Morning Chime', category: 'Sacred Objects', description: 'The resonant sound of the temple bell marks the beginning of mindfulness.', image: bellImg },
+    { id: 6, title: 'Bodhi Shade', category: 'Nature', description: 'The venerable tree under which enlightenment was realized.', image: treeImg },
+    { id: 7, title: 'Spinning Devotion', category: 'Sacred Objects', description: 'Prayer wheels containing thousands of mantras for world peace.', image: wheelsImg },
+    { id: 8, title: 'Pure Offering', category: 'Sacred Objects', description: 'Sandalwood incense drifting upwards, symbolizing the spread of dharma.', image: incenseImg },
+];
+
+function Gallery() {
+    const [selectedItem, setSelectedItem] = useState(null);
 
     return (
-        <div className="page gallery-page">
+        <motion.div
+            className="page gallery-page"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8 }}
+        >
             <div className="page-header">
-                <motion.h1
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8 }}
-                    className="page-title"
-                >
-                    <span className="dharma-icon">🖼️</span>
+                <h1 className="page-title">
+                    <span className="title-icon">🎨</span>
                     Sacred Gallery
-                </motion.h1>
-                <motion.p
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.2 }}
-                    className="page-subtitle"
-                >
-                    A collection of Buddhist art, architecture, and natural beauty
-                </motion.p>
+                </h1>
+                <p className="page-subtitle">Visual reflections of the enlightened path</p>
             </div>
 
             <div className="gallery-grid">
                 {galleryItems.map((item, index) => (
                     <motion.div
                         key={item.id}
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.5, delay: index * 0.1 }}
                         className="gallery-card"
-                        onClick={() => setSelectedImage(item)}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                        onClick={() => setSelectedItem(item)}
+                        whileHover={{ y: -10 }}
                     >
                         <div className="gallery-card-image">
-                            <div className="placeholder-image">
-                                <span className="placeholder-icon">
-                                    {item.category === 'Statues' && '🗿'}
-                                    {item.category === 'Gardens' && '🏯'}
-                                    {item.category === 'Nature' && '🌸'}
-                                    {item.category === 'Architecture' && '⛩️'}
-                                    {item.category === 'Sacred Objects' && '☸'}
-                                </span>
+                            <img src={item.image} alt={item.title} loading="lazy" />
+                            <div className="card-overlay">
+                                <span className="view-text">View Details</span>
                             </div>
                         </div>
                         <div className="gallery-card-content">
-                            <div className="gallery-category">{item.category}</div>
+                            <span className="gallery-category">{item.category}</span>
                             <h3 className="gallery-title">{item.title}</h3>
                             <p className="gallery-description">{item.description}</p>
                         </div>
@@ -108,36 +68,51 @@ function Gallery() {
                 ))}
             </div>
 
-            {selectedImage && (
-                <motion.div
-                    className="lightbox"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    onClick={() => setSelectedImage(null)}
-                >
-                    <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
-                        <button className="lightbox-close" onClick={() => setSelectedImage(null)}>
-                            ✕
-                        </button>
-                        <div className="lightbox-image">
-                            <span className="lightbox-icon">
-                                {selectedImage.category === 'Statues' && '🗿'}
-                                {selectedImage.category === 'Gardens' && '🏯'}
-                                {selectedImage.category === 'Nature' && '🌸'}
-                                {selectedImage.category === 'Architecture' && '⛩️'}
-                                {selectedImage.category === 'Sacred Objects' && '☸'}
-                            </span>
-                        </div>
-                        <div className="lightbox-info">
-                            <div className="lightbox-category">{selectedImage.category}</div>
-                            <h2 className="lightbox-title">{selectedImage.title}</h2>
-                            <p className="lightbox-description">{selectedImage.description}</p>
-                        </div>
-                    </div>
-                </motion.div>
-            )}
-        </div>
+            <AnimatePresence>
+                {selectedItem && (
+                    <motion.div
+                        className="lightbox"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        onClick={() => setSelectedItem(null)}
+                    >
+                        <motion.div
+                            className="lightbox-content"
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.9, opacity: 0 }}
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <button className="lightbox-close" onClick={() => setSelectedItem(null)}>
+                                ✕
+                            </button>
+                            <div className="lightbox-image-container">
+                                <img src={selectedItem.image} alt={selectedItem.title} />
+                            </div>
+                            <div className="lightbox-info">
+                                <span className="gallery-category">{selectedItem.category}</span>
+                                <h2 className="lightbox-title-text" style={{
+                                    fontFamily: "'Playfair Display', serif",
+                                    color: "#ffd700",
+                                    fontSize: "2rem",
+                                    margin: "0 0 1rem 0"
+                                }}>
+                                    {selectedItem.title}
+                                </h2>
+                                <p className="section-text">{selectedItem.description}</p>
+                                <div className="wisdom-quote" style={{ marginTop: '2rem', textAlign: 'left' }}>
+                                    <p className="quote-text" style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>
+                                        "Peace comes from within. Do not seek it without."
+                                    </p>
+                                    <span className="quote-author" style={{ color: "#ffd700" }}>— The Buddha</span>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </motion.div>
     );
 }
 

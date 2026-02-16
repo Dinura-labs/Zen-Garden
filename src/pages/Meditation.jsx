@@ -1,191 +1,229 @@
-import { motion } from 'framer-motion';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import './styles.css';
 
 function Meditation() {
     const [isActive, setIsActive] = useState(false);
-    const [timeRemaining, setTimeRemaining] = useState(10 * 60); // 10 minutes in seconds
-    const [selectedDuration, setSelectedDuration] = useState(10);
-    const [breathPhase, setBreathPhase] = useState('inhale'); // inhale, hold, exhale, pause
-    const intervalRef = useRef(null);
-    const breathIntervalRef = useRef(null);
-
-    const durations = [5, 10, 15, 20, 30];
+    const [duration, setDuration] = useState(300); // Default 5 mins
+    const [timeLeft, setTimeLeft] = useState(300);
+    const [breathPhase, setBreathPhase] = useState('resting'); // inhale, hold, exhale, pause
 
     useEffect(() => {
-        if (isActive && timeRemaining > 0) {
-            intervalRef.current = setInterval(() => {
-                setTimeRemaining((prev) => prev - 1);
+        let timer;
+        if (isActive && timeLeft > 0) {
+            timer = setInterval(() => {
+                setTimeLeft((prev) => prev - 1);
             }, 1000);
-        } else if (timeRemaining === 0) {
+        } else if (timeLeft === 0) {
             setIsActive(false);
         }
-
-        return () => clearInterval(intervalRef.current);
-    }, [isActive, timeRemaining]);
+        return () => clearInterval(timer);
+    }, [isActive, timeLeft]);
 
     useEffect(() => {
+        let breathTimer;
         if (isActive) {
-            const breathCycle = () => {
-                setBreathPhase('inhale');
-                setTimeout(() => setBreathPhase('hold'), 4000);
-                setTimeout(() => setBreathPhase('exhale'), 8000);
-                setTimeout(() => setBreathPhase('pause'), 14000);
+            const phases = [
+                { name: 'inhale', duration: 4000 },
+                { name: 'hold', duration: 4000 },
+                { name: 'exhale', duration: 4000 },
+                { name: 'pause', duration: 4000 },
+            ];
+
+            let currentIdx = 0;
+            const cycle = () => {
+                setBreathPhase(phases[currentIdx].name);
+                breathTimer = setTimeout(() => {
+                    currentIdx = (currentIdx + 1) % phases.length;
+                    cycle();
+                }, phases[currentIdx].duration);
             };
 
-            breathCycle();
-            breathIntervalRef.current = setInterval(breathCycle, 16000);
+            cycle();
         } else {
-            clearInterval(breathIntervalRef.current);
-            setBreathPhase('inhale');
+            setBreathPhase('resting');
         }
-
-        return () => clearInterval(breathIntervalRef.current);
+        return () => clearTimeout(breathTimer);
     }, [isActive]);
 
     const formatTime = (seconds) => {
         const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
-        return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
 
-    const startMeditation = () => {
-        setIsActive(true);
-    };
-
-    const pauseMeditation = () => {
+    const handleStart = () => setIsActive(true);
+    const handlePause = () => setIsActive(false);
+    const handleReset = () => {
         setIsActive(false);
+        setTimeLeft(duration);
     };
 
-    const resetMeditation = () => {
+    const selectDuration = (secs) => {
+        setDuration(secs);
+        setTimeLeft(secs);
         setIsActive(false);
-        setTimeRemaining(selectedDuration * 60);
-    };
-
-    const handleDurationChange = (duration) => {
-        setSelectedDuration(duration);
-        setTimeRemaining(duration * 60);
-        setIsActive(false);
-    };
-
-    const getBreathInstruction = () => {
-        switch (breathPhase) {
-            case 'inhale':
-                return 'Breathe In';
-            case 'hold':
-                return 'Hold';
-            case 'exhale':
-                return 'Breathe Out';
-            case 'pause':
-                return 'Pause';
-            default:
-                return 'Breathe';
-        }
-    };
-
-    const getBreathScale = () => {
-        switch (breathPhase) {
-            case 'inhale':
-                return 1.4;
-            case 'hold':
-                return 1.4;
-            case 'exhale':
-                return 1;
-            case 'pause':
-                return 1;
-            default:
-                return 1;
-        }
     };
 
     return (
-        <div className="page meditation-page">
+        <motion.div
+            className="page meditation-page"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.6 }}
+        >
             <div className="page-header">
-                <motion.h1
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8 }}
-                    className="page-title"
-                >
-                    <span className="dharma-icon">🧘</span>
-                    Guided Meditation
-                </motion.h1>
-                <motion.p
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.2 }}
-                    className="page-subtitle"
-                >
-                    Find inner peace through mindful practice
-                </motion.p>
+                <h1 className="page-title" style={{ fontFamily: "'Playfair Display', serif" }}>
+                    <span className="title-icon">🧘</span>
+                    Mindful Space
+                </h1>
+                <p className="page-subtitle">Quiet the mind and the soul will speak</p>
             </div>
 
             <div className="meditation-container">
                 <motion.div
-                    className="breath-visualizer"
-                    animate={{
-                        scale: getBreathScale(),
-                    }}
-                    transition={{
-                        duration: breathPhase === 'inhale' ? 4 : breathPhase === 'exhale' ? 6 : 0.5,
-                        ease: 'easeInOut',
-                    }}
+                    className="glass-card main-meditation-card"
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.2 }}
+                    style={{ padding: "4rem 2rem" }}
                 >
-                    <div className="breath-circle">
-                        <span className="breath-instruction">{getBreathInstruction()}</span>
+                    <motion.div
+                        className="breath-visualizer"
+                        animate={{
+                            scale: breathPhase === 'inhale' ? 1.3 : breathPhase === 'exhale' ? 0.9 : 1.1,
+                            boxShadow: breathPhase === 'inhale' ? "0 0 50px rgba(255, 215, 0, 0.4)" : "0 0 20px rgba(255, 215, 0, 0.1)"
+                        }}
+                        transition={{ duration: 4, ease: "easeInOut" }}
+                        style={{
+                            width: "200px",
+                            height: "200px",
+                            margin: "0 auto 3rem",
+                            borderRadius: "50%",
+                            border: "2px solid #ffd700",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            background: "radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%)"
+                        }}
+                    >
+                        <span className="breath-instruction" style={{
+                            fontFamily: "'Playfair Display', serif",
+                            color: "#ffd700",
+                            fontSize: "1.2rem",
+                            letterSpacing: "4px"
+                        }}>
+                            {isActive ? breathPhase.toUpperCase() : 'READY'}
+                        </span>
+                    </motion.div>
+
+                    <div className="timer-display" style={{
+                        fontSize: "5rem",
+                        fontFamily: "'Playfair Display', serif",
+                        color: "#ffd700",
+                        marginBottom: "2rem"
+                    }}>
+                        {formatTime(timeLeft)}
+                    </div>
+
+                    <div className="duration-selector" style={{ marginBottom: "3rem" }}>
+                        <p className="selector-label" style={{ color: "rgba(253, 245, 230, 0.6)", marginBottom: "1rem" }}>
+                            Select Session Duration
+                        </p>
+                        <div className="duration-buttons" style={{ display: "flex", justifyContent: "center", gap: "1rem" }}>
+                            {[60, 300, 600, 900].map((s) => (
+                                <button
+                                    key={s}
+                                    className={`duration-btn ${duration === s ? 'active' : ''}`}
+                                    onClick={() => selectDuration(s)}
+                                    style={{
+                                        padding: "0.5rem 1.5rem",
+                                        borderRadius: "50px",
+                                        border: "1px solid rgba(255, 215, 0, 0.3)",
+                                        background: duration === s ? "#ffd700" : "transparent",
+                                        color: duration === s ? "#1a0f0f" : "#fdf5e6",
+                                        transition: "all 0.3s ease"
+                                    }}
+                                >
+                                    {s / 60}m
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="meditation-controls" style={{ display: "flex", justifyContent: "center", gap: "2rem" }}>
+                        {!isActive ? (
+                            <button
+                                className="control-btn start-btn"
+                                onClick={handleStart}
+                                style={{
+                                    background: "#ffd700",
+                                    color: "#1a0f0f",
+                                    padding: "1rem 2.5rem",
+                                    borderRadius: "50px",
+                                    fontWeight: "bold",
+                                    border: "none"
+                                }}
+                            >
+                                <span>▶</span> Start Practice
+                            </button>
+                        ) : (
+                            <button
+                                className="control-btn pause-btn"
+                                onClick={handlePause}
+                                style={{
+                                    background: "rgba(255, 255, 255, 0.1)",
+                                    color: "#fdf5e6",
+                                    padding: "1rem 2.5rem",
+                                    borderRadius: "50px",
+                                    border: "1px solid rgba(255, 255, 255, 0.2)"
+                                }}
+                            >
+                                <span>⏸</span> Pause
+                            </button>
+                        )}
+                        <button
+                            className="control-btn reset-btn"
+                            onClick={handleReset}
+                            style={{
+                                background: "transparent",
+                                color: "rgba(253, 245, 230, 0.6)",
+                                padding: "1rem 2rem",
+                                borderRadius: "50px",
+                                border: "1px solid rgba(255, 255, 255, 0.1)"
+                            }}
+                        >
+                            Reset
+                        </button>
                     </div>
                 </motion.div>
 
-                <div className="timer-display">
-                    <div className="time-remaining">{formatTime(timeRemaining)}</div>
-                </div>
-
-                <div className="duration-selector">
-                    <p className="selector-label">Select Duration</p>
-                    <div className="duration-buttons">
-                        {durations.map((duration) => (
-                            <button
-                                key={duration}
-                                className={`duration-btn ${selectedDuration === duration ? 'active' : ''}`}
-                                onClick={() => handleDurationChange(duration)}
-                                disabled={isActive}
-                            >
-                                {duration} min
-                            </button>
-                        ))}
-                    </div>
-                </div>
-
-                <div className="meditation-controls">
-                    {!isActive ? (
-                        <button className="control-btn start-btn" onClick={startMeditation}>
-                            <span className="btn-icon">▶</span>
-                            Begin Meditation
-                        </button>
-                    ) : (
-                        <button className="control-btn pause-btn" onClick={pauseMeditation}>
-                            <span className="btn-icon">⏸</span>
-                            Pause
-                        </button>
-                    )}
-                    <button className="control-btn reset-btn" onClick={resetMeditation}>
-                        <span className="btn-icon">↻</span>
-                        Reset
-                    </button>
-                </div>
-
-                <div className="meditation-tips glass-card">
-                    <h3 className="tips-title">Meditation Tips</h3>
-                    <ul className="tips-list">
-                        <li>Find a quiet, comfortable space</li>
-                        <li>Sit with your back straight and shoulders relaxed</li>
-                        <li>Close your eyes or maintain a soft gaze</li>
-                        <li>Follow the breathing guide naturally</li>
-                        <li>If your mind wanders, gently return focus to your breath</li>
+                <motion.div
+                    className="glass-card tips-card"
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.4 }}
+                    style={{ marginTop: "2rem", padding: "2.5rem" }}
+                >
+                    <h3 className="tips-title" style={{ color: "#ffd700", marginBottom: "1.5rem" }}>Meditation Tips</h3>
+                    <ul className="tips-list" style={{ listStyle: "none", padding: 0, textAlign: "left" }}>
+                        <li style={{ marginBottom: "1rem", display: "flex", gap: "1rem", color: "rgba(253, 245, 230, 0.8)" }}>
+                            <span>🧘</span> Find a comfortable, upright position to allow free energy flow.
+                        </li>
+                        <li style={{ marginBottom: "1rem", display: "flex", gap: "1rem", color: "rgba(253, 245, 230, 0.8)" }}>
+                            <span>🌬️</span> Focus on the natural rhythm of your breath as it enters and leaves.
+                        </li>
+                        <li style={{ marginBottom: "1rem", display: "flex", gap: "1rem", color: "rgba(253, 245, 230, 0.8)" }}>
+                            <span>🍃</span> When thoughts arise, acknowledge them like clouds passing in the sky.
+                        </li>
+                        <li style={{ display: "flex", gap: "1rem", color: "rgba(253, 245, 230, 0.8)" }}>
+                            <span>✨</span> Return gently to the present moment without any judgment.
+                        </li>
                     </ul>
-                </div>
-            </div>
-        </div>
+                </motion.div>
+            </div >
+        </motion.div >
     );
 }
 
